@@ -60,6 +60,7 @@ public class TextAdventure {
             String pokemon = wildPokemon[rng.nextInt(wildPokemon.length)];
             int wildHP = 6;
             int wildAttack = 0;
+            int coins = 0;
             System.out.println("A wild " + pokemon + " appeared!");
 
             boolean battle = true;
@@ -78,17 +79,19 @@ public class TextAdventure {
 
                     if (wildHP <= 0) {
                         System.out.println("You defeated " + pokemon + "! Victory!");
+                        coins += 10;
+                        System.out.println("You earned 10 Pokécoins!");
                         battle = false;
-                        break;
+                
                     }
 
                     System.out.println(pokemon + " dealt " + wildDmg + " damage!");
                     playerHP -= wildDmg;
 
                     if (playerHP <= 0) {
-                        System.out.println("You fainted! Game over.");
+                        System.out.println("You fainted!");
                         battle = false;
-                        break;
+            
                     }
 
                 } else if (choice.equals("run")) {
