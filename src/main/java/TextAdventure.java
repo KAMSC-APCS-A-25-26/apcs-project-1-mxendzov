@@ -17,6 +17,11 @@ public class TextAdventure {
             int pokeballs = 3;
             int potions = 1;
 
+            // Leveling system setup
+            int level = 1;
+            int xp = 0;
+            int xpToNext = level * 10;
+
             System.out.println("Welcome to the world of Pokémon!");
             System.out.print("Are you ready to pick your starter Pokémon? (yes or no): ");
             String yesOrNo = sc.nextLine().toLowerCase();
@@ -55,7 +60,8 @@ public class TextAdventure {
                 System.out.println("2) Pokémon Center");
                 System.out.println("3) Poké Mart");
                 System.out.println("4) Backpack");
-                System.out.println("5) Quit Game");
+                System.out.println("5) Gym Battle");
+                System.out.println("6) Are you a Pokemon Master (ends the game)");
                 System.out.print("> ");
 
                 int choice = 0;
@@ -68,30 +74,46 @@ public class TextAdventure {
                 }
 
                 switch (choice) {
-                    case 1: {
+                    case 1: { // ROUTE BATTLE
                         String[] wildPokemon = {"Pidgey", "Rattata", "Caterpie", "Weedle"};
                         String pokemon = wildPokemon[rng.nextInt(wildPokemon.length)];
-                        int wildHP = 6;
-                        int wildAttack = 0;
+                        int wildHP = 6 + rng.nextInt(4);
+                        int wildAttack = rng.nextInt(3);
 
                         System.out.println("\nA wild " + pokemon + " appeared!");
                         boolean battling = true;
 
                         while (battling) {
-                            System.out.println("\nYour HP: " + playerHP + "/" + maxHP + " | " + pokemon + " HP: " + wildHP);
+                            System.out.println("\nYour HP: " + playerHP + "/" + maxHP +
+                                    " | " + pokemon + " HP: " + wildHP +
+                                    " | LVL: " + level + " (" + xp + "/" + xpToNext + " XP)");
                             System.out.print("Choose (attack/run/item): ");
                             String battleChoice = sc.nextLine().toLowerCase();
 
                             if (battleChoice.equals("attack")) {
-                                int dmg = playerAttack + rng.nextInt(5);
+                                int routeDmg = playerAttack + rng.nextInt(5);
                                 int wildDmg = wildAttack + rng.nextInt(3);
 
-                                System.out.println("You dealt " + dmg + " damage!");
-                                wildHP -= dmg;
+                                System.out.println("You dealt " + routeDmg + " damage!");
+                                wildHP -= routeDmg;
 
                                 if (wildHP <= 0) {
-                                    System.out.println("You defeated " + pokemon + "! You earned 10 coins!");
-                                    coins += 10;
+                                    System.out.println("You defeated " + pokemon + "! You earned 5 coins and 10 XP!");
+                                    coins += 5;
+                                    xp += 10;
+
+                                    // Level-up check
+                                    if (xp >= xpToNext) {
+                                        level++;
+                                        xp = xp - xpToNext;
+                                        xpToNext = level * 10;
+                                        maxHP += 2;
+                                        playerAttack += 1;
+                                        playerHP = maxHP;
+                                        System.out.println("\n🎉 " + playerPoke + " leveled up to Level " + level + "!");
+                                        System.out.println("Stats increased! HP: " + maxHP + " | Attack: " + playerAttack);
+                                    }
+
                                     battling = false;
                                     break;
                                 }
@@ -139,12 +161,16 @@ public class TextAdventure {
                                 }
                             }
                         }
+                        break;
                     }
+
                     case 2: {
                         System.out.println("\nNurse Joy heals your Pokémon to full health!");
                         playerHP = maxHP;
                         healCount++;
+                        break;
                     }
+
                     case 3: {
                         boolean shopping = true;
                         while (shopping) {
@@ -159,7 +185,7 @@ public class TextAdventure {
                             sc.nextLine();
 
                             switch (buy) {
-                                case 1:{
+                                case 1:
                                     if (coins >= 10) {
                                         pokeballs++;
                                         coins -= 10;
@@ -167,8 +193,8 @@ public class TextAdventure {
                                     } else {
                                         System.out.println("Not enough coins!");
                                     }
-                                }
-                                case 2: {
+                                    break;
+                                case 2:
                                     if (coins >= 15) {
                                         potions++;
                                         coins -= 15;
@@ -176,12 +202,17 @@ public class TextAdventure {
                                     } else {
                                         System.out.println("Not enough coins!");
                                     }
-                                }
-                                case 3: shopping = false;
-                                default: System.out.println("Invalid choice.");
+                                    break;
+                                case 3:
+                                    shopping = false;
+                                    break;
+                                default:
+                                    System.out.println("Invalid choice.");
                             }
                         }
+                        break;
                     }
+
                     case 4: {
                         System.out.println("\n🎒 Backpack:");
                         System.out.println("Poké Balls: " + pokeballs);
@@ -189,18 +220,165 @@ public class TextAdventure {
                         System.out.println("Coins: " + coins);
                         System.out.println("Caught Pokémon: " + caughtCount);
                         System.out.println("Heals used: " + healCount + " | Faints: " + faintCount);
+                        System.out.println("Level: " + level + " | XP: " + xp + "/" + xpToNext);
+                        break;
                     }
-                    case 5: {
 
+                    case 5: { // GYM BATTLE
+                        if (coins < 50) {
+                            System.out.println("\n🏟️ The Gym Leader blocks your way: “You’re not ready yet! Earn at least 50 coins first!”");
+                            break;
+                        }
+
+                        System.out.println("\n🏟️ You enter the Pewter City Gym!");
+                        System.out.println("Gym Leader Brock challenges you with his Onix!");
+                        int gymHP = 20 + (level * 2);
+                        int gymAttack = 1 + (level / 2);
+                        boolean gymBattle = true;
+
+                        while (gymBattle) {
+                            System.out.println("\nYour HP: " + playerHP + "/" + maxHP +
+                                    " | Onix HP: " + gymHP +
+                                    " | LVL: " + level + " (" + xp + "/" + xpToNext + " XP)");
+                            System.out.print("Choose (attack/item): ");
+                            String gymChoice = sc.nextLine().toLowerCase();
+
+                            if (gymChoice.equals("attack")) {
+                                int gymDmg = playerAttack + rng.nextInt(5) + 3;
+                                int onixDmg = gymAttack + rng.nextInt(4);
+                                System.out.println("You dealt " + gymDmg + " damage!");
+                                gymHP -= gymDmg;
+
+                                if (gymHP <= 0) {
+                                    System.out.println("\nYou defeated Onix!");
+                                    System.out.println("🏅 You earned the Boulder Badge, 50 coins, and 30 XP!");
+                                    coins += 50;
+                                    xp += 30;
+
+                                    if (xp >= xpToNext) {
+                                        level++;
+                                        xp = xp - xpToNext;
+                                        xpToNext = level * 10;
+                                        maxHP += 2;
+                                        playerAttack += 1;
+                                        playerHP = maxHP;
+                                        System.out.println("\n🎉 " + playerPoke + " leveled up to Level " + level + "!");
+                                        System.out.println("Stats increased! HP: " + maxHP + " | Attack: " + playerAttack);
+                                    }
+
+                                    // Major decision point after gym
+                                    boolean decisionMade = false;
+                                    boolean rushedLeague = false;
+                                    while (!decisionMade) {
+                                        System.out.println("\n🗺️ What will you do next?");
+                                        System.out.println("1) Challenge the Pokémon League immediately!");
+                                        System.out.println("2) Train further on Route 1 to level up and earn more coins.");
+                                        System.out.print("> ");
+
+                                        String decision = sc.nextLine();
+                                        if (decision.equals("1")) {
+                                            System.out.println("\n🚀 You rush to the Pokémon League!");
+                                            coins += 20; // bonus for bravery
+                                            xp += 20;    // bonus XP
+                                            rushedLeague = true;
+                                            decisionMade = true;
+                                        } else if (decision.equals("2")) {
+                                            System.out.println("\n💪 You return to Route 1 to train and prepare.");
+                                            decisionMade = true;
+                                        } else {
+                                            System.out.println("Invalid choice! Please enter 1 or 2.");
+                                        }
+                                    }
+
+                                    // Rival encounter if rushed
+                                    if (rushedLeague) {
+                                        System.out.println("\n⚡ Your rival appears and challenges you!");
+                                        int rivalHP = 15 + level * 2;
+                                        int rivalAttack = 1 + level / 2;
+                                        boolean rivalBattle = true;
+
+                                        while (rivalBattle) {
+                                            System.out.println("\nYour HP: " + playerHP + "/" + maxHP +
+                                                    " | Rival's Pokémon HP: " + rivalHP);
+                                            System.out.print("Choose (attack/item): ");
+                                            String rivalChoice = sc.nextLine().toLowerCase();
+
+                                            if (rivalChoice.equals("attack")) {
+                                                int rivalDmg = playerAttack + rng.nextInt(5);
+                                                int rivalHit = rivalAttack + rng.nextInt(4);
+                                                System.out.println("You dealt " + rivalDmg + " damage!");
+                                                rivalHP -= rivalDmg;
+
+                                                if (rivalHP <= 0) {
+                                                    System.out.println("\nYou defeated your rival!");
+                                                    coins += 30;
+                                                    xp += 20;
+                                                    System.out.println("💰 Earned 30 coins and 20 XP!");
+                                                    rivalBattle = false;
+                                                    break;
+                                                }
+
+                                                System.out.println("Rival hit you for " + rivalHit + " damage!");
+                                                playerHP -= rivalHit;
+
+                                                if (playerHP <= 0) {
+                                                    System.out.println("\nYou fainted against your rival!");
+                                                    faintCount++;
+                                                    playerHP = maxHP;
+                                                    rivalBattle = false;
+                                                    break;
+                                                }
+                                            } else if (rivalChoice.equals("item")) {
+                                                if (potions > 0) {
+                                                    potions--;
+                                                    playerHP = Math.min(playerHP + 10, maxHP);
+                                                    System.out.println("You used a potion! HP restored to " + playerHP + "/" + maxHP);
+                                                } else {
+                                                    System.out.println("You’re out of potions!");
+                                                }
+                                            } else {
+                                                System.out.println("Invalid choice!");
+                                            }
+                                        }
+                                    }
+
+                                    gymBattle = false;
+                                    break;
+                                }
+
+                                System.out.println("Onix hit you for " + onixDmg + " damage!");
+                                playerHP -= onixDmg;
+
+                                if (playerHP <= 0) {
+                                    System.out.println("\nYou fainted! Brock says, “Train harder, rookie!”");
+                                    faintCount++;
+                                    playerHP = maxHP;
+                                    gymBattle = false;
+                                    break;
+                                }
+
+                            } else if (gymChoice.equals("item")) {
+                                if (potions > 0) {
+                                    potions--;
+                                    playerHP = Math.min(playerHP + 10, maxHP);
+                                    System.out.println("You used a potion! HP restored to " + playerHP + "/" + maxHP);
+                                } else {
+                                    System.out.println("You’re out of potions!");
+                                }
+                            } else {
+                                System.out.println("Invalid choice!");
+                            }
+                        }
+                        break;
+                    }
+
+                    case 6: { // QUIT GAME
                         if (coins >= 100 && pokeballs > 0) {
                             System.out.println("\n...Suddenly, a powerful roar echoes across the land...");
-                            System.out.println("A");
-                            System.out.println("A");
                             for (int i = 3; i > 0; i--) {
                                 System.out.println("Shaking... " + i + "...");
                             }
                             if (rng.nextDouble() < 0.7) {
-                                System.out.println("");
                                 System.out.println("✨ SECRET ENDING: You became the Legendary Trainer of Kanto! ✨");
                             } else {
                                 System.out.println("Mewtwo broke free and disappeared into the shadows...");
@@ -213,10 +391,12 @@ public class TextAdventure {
                         } else {
                             System.out.println("\n🚶 You return home to rest. (Neutral Ending)");
                         }
-
                         playing = false;
+                        break;
                     }
-                    default: System.out.println("Invalid option!");
+
+                    default:
+                        System.out.println("Invalid option!");
                 }
             }
 
@@ -229,5 +409,3 @@ public class TextAdventure {
         sc.close();
     }
 }
-
-
