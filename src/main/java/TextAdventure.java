@@ -109,7 +109,6 @@ public class TextAdventure {
                                         xpToNext = level * 10;
                                         maxHP += 2;
                                         playerAttack += 1;
-                                        playerHP = maxHP;
                                         System.out.println("\n🎉 " + playerPoke + " leveled up to Level " + level + "!");
                                         System.out.println("Stats increased! HP: " + maxHP + " | Attack: " + playerAttack);
                                     }
@@ -261,7 +260,6 @@ public class TextAdventure {
                                         xpToNext = level * 10;
                                         maxHP += 2;
                                         playerAttack += 1;
-                                        playerHP = maxHP;
                                         System.out.println("\n🎉 " + playerPoke + " leveled up to Level " + level + "!");
                                         System.out.println("Stats increased! HP: " + maxHP + " | Attack: " + playerAttack);
                                     }
@@ -371,41 +369,31 @@ public class TextAdventure {
                         }
                         break;
                     }
-
-                    case 6: { // QUIT GAME
-                        if (coins >= 100 && pokeballs > 0) {
-                            System.out.println("\n...Suddenly, a powerful roar echoes across the land...");
-                            for (int i = 3; i > 0; i--) {
-                                System.out.println("Shaking... " + i + "...");
-                            }
-                            if (rng.nextDouble() < 0.7) {
-                                System.out.println("✨ SECRET ENDING: You became the Legendary Trainer of Kanto! ✨");
+                        case 6: { // Attempt League / Ending
+                            if (level >= 6 && coins >= 100 && xp >= 80 && pokeballs > 0 && faintCount <= 2 && healCount <=7) {
+                                System.out.println("\n🏆 You became a true Pokémon Champion! ✨");
+                                System.out.println("You trained hard, built Pokémon bonds, and became a great trainer !");
+                            } else if (level >= 5 && coins >= 80 && faintCount <= 3) {
+                                System.out.println("\n👍 You became a Pokémon Champion, but your journey is not perfect. (Good Ending)");
+                            } else if (faintCount >= 3) {
+                                System.out.println("\n💀 You lost too many battles... (Bad Ending)");
                             } else {
-                                System.out.println("Mewtwo broke free and disappeared into the shadows...");
-                                System.out.println("😱 SECRET ENDING FAILED: The legend continues...");
+                                System.out.println("\n🚶 You return home to rest. (Neutral Ending)");
                             }
-                        } else if (coins >= 80) {
-                            System.out.println("\n🏆 You became a Pokémon Champion! (Good Ending)");
-                        } else if (faintCount >= 3) {
-                            System.out.println("\n💀 You lost too many battles... (Bad Ending)");
-                        } else {
-                            System.out.println("\n🚶 You return home to rest. (Neutral Ending)");
+                            playing = false;
+                            break;
                         }
-                        playing = false;
-                        break;
+                        default:
+                            System.out.println("Invalid option!");
                     }
-
-                    default:
-                        System.out.println("Invalid option!");
                 }
-            }
 
-            System.out.print("\nPlay again? (yes or no): ");
-            playAgain = sc.nextLine().toLowerCase();
+                System.out.print("\nPlay again? (yes or no): ");
+                playAgain = sc.nextLine().toLowerCase();
 
-        } while (playAgain.equals("yes"));
+            } while (playAgain.equals("yes"));
 
-        System.out.println("\nThanks for playing!");
-        sc.close();
+            System.out.println("\nThanks for playing!");
+            sc.close();
+        }
     }
-}
