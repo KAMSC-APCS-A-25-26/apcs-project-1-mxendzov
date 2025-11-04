@@ -74,7 +74,7 @@ public class TextAdventure {
                 }
 
                 switch (choice) {
-                    case 1: { // ROUTE BATTLE
+                    case 1: { 
                         String[] wildPokemon = {"Pidgey", "Rattata", "Caterpie", "Weedle"};
                         String pokemon = wildPokemon[rng.nextInt(wildPokemon.length)];
                         int wildHP = 6 + rng.nextInt(4);
@@ -276,8 +276,8 @@ public class TextAdventure {
                                         String decision = sc.nextLine();
                                         if (decision.equals("1")) {
                                             System.out.println("\n🚀 You rush to the Pokémon League!");
-                                            coins += 20; // bonus for bravery
-                                            xp += 20;    // bonus XP
+                                            coins += 20; 
+                                            xp += 20;    
                                             rushedLeague = true;
                                             decisionMade = true;
                                         } else if (decision.equals("2")) {
@@ -338,6 +338,12 @@ public class TextAdventure {
                                                 System.out.println("Invalid choice!");
                                             }
                                         }
+
+                                        
+                                        System.out.println("\n🏆 After defeating your rival, you are ready to become a Pokémon Master!");
+                                        choice = 6; 
+                                        gymBattle = false;
+                                        break;
                                     }
 
                                     gymBattle = false;
@@ -369,31 +375,42 @@ public class TextAdventure {
                         }
                         break;
                     }
-                        case 6: { // Attempt League / Ending
-                            if (level >= 6 && coins >= 100 && xp >= 80 && pokeballs > 0 && faintCount <= 2 && healCount <=7) {
-                                System.out.println("\n🏆 You became a true Pokémon Champion! ✨");
-                                System.out.println("You trained hard, built Pokémon bonds, and became a great trainer !");
-                            } else if (level >= 5 && coins >= 80 && faintCount <= 3) {
-                                System.out.println("\n👍 You became a Pokémon Champion, but your journey is not perfect. (Good Ending)");
-                            } else if (faintCount >= 3) {
-                                System.out.println("\n💀 You lost too many battles... (Bad Ending)");
-                            } else {
-                                System.out.println("\n🚶 You return home to rest. (Neutral Ending)");
-                            }
-                            playing = false;
-                            break;
-                        }
-                        default:
-                            System.out.println("Invalid option!");
-                    }
-                }
 
-                System.out.print("\nPlay again? (yes or no): ");
-                playAgain = sc.nextLine().toLowerCase();
-
-            } while (playAgain.equals("yes"));
-
-            System.out.println("\nThanks for playing!");
-            sc.close();
-        }
+                    case 6: { // Ending case
+    System.out.println("\n🌅 The sun sets over the region, painting the skies in gold and crimson...");
+    
+    if (level >= 6 && coins >= 100 && xp >= 80 && faintCount <= 2 && healCount <= 7) {
+        System.out.println("🏆 You stand at the peak of your journey, a true Pokémon Champion!");
+        System.out.println("Through battles, challenges, and relentless training, you've proven your strength and determination.");
+        System.out.println("Your name will be remembered in the halls of trainers for years to come. ✨");
+    } else if (level >= 5 && coins >= 80 && faintCount <= 3) {
+        System.out.println("👍 You became a Pokémon Champion, though the journey was not without its struggles.");
+        System.out.println("Every victory and defeat shaped you into a stronger trainer, and your story inspires others.");
+    } else if (faintCount >= 3) {
+        System.out.println("💀 Many battles were lost, and the path was harsh...");
+        System.out.println("Yet every challenge taught you resilience. Someday, you will rise again stronger than ever.");
+    } else {
+        System.out.println("🚶 You return home, reflecting on your journey with pride and lessons learned.");
+        System.out.println("Though the League remains unconquered, your heart and courage grew with every step.");
     }
+
+    System.out.println("\n✨ Thank you for embarking on this adventure. Your legacy as a trainer has begun! ✨");
+    playing = false;
+    break;
+}
+
+
+                    default:
+                        System.out.println("Invalid option!");
+                }
+            }
+
+            System.out.print("\nPlay again? (yes or no): ");
+            playAgain = sc.nextLine().toLowerCase();
+
+        } while (playAgain.equals("yes"));
+
+        System.out.println("\nThanks for playing!");
+        sc.close();
+    }
+}
